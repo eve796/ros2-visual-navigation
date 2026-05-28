@@ -58,3 +58,5 @@ image_loader
 *.out
 *.o
 build/
+# Program outputs
+outputs/
