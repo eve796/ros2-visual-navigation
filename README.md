@@ -53,3 +53,20 @@ Build a simulation-first robotics system that helps me learn ROS2, Linux-based e
 ## Learning Log
 
 See [`docs/learning-log.md`](docs/learning-log.md).
+
+## Current OpenCV + CMake Milestone
+
+This project currently includes a minimal C++ OpenCV image-processing example.
+
+The program:
+- loads an image from `assets/test.jpg`
+- prints width, height, and channel count
+- converts the image to grayscale
+- saves the result to `outputs/test_gray.jpg`
+
+Build with CMake:
+
+```bash
+cmake -S . -B build
+cmake --build build
+./build/image_loader

@@ -171,3 +171,83 @@ ros2: command not found
   - `git push`
 - Before every commit, check whether Git is tracking only source code, documentation, and useful assets.
 - Continue treating the GitHub repository as an engineering notebook.
+
+## 2026-05-28
+
+### What I did
+- Checked the project status with `git status`.
+- Learned why `git pull --rebase` cannot run when there are unstaged local changes.
+- Reviewed the importance of having a clean working tree before synchronizing with GitHub.
+- Created an `outputs/` directory for generated program results.
+- Learned the difference between:
+  - `mkdir outputs`
+  - `mkdir -p outputs`
+- Accidentally typed `.gitigonore` instead of `.gitignore`.
+- Fixed the typo by appending the mistaken file’s contents into `.gitignore` and deleting the wrong file.
+- Learned what `cat` does:
+  - display file contents
+  - read one file and redirect/append its contents into another file
+- Updated `.gitignore` to ignore generated program outputs:
+  - `outputs/`
+- Extended `src/image_loader.cpp` from a simple image loader into a small image-processing pipeline.
+- Modified the program to:
+  - load `assets/test.jpg`
+  - print image width
+  - print image height
+  - print number of channels
+  - convert the image to grayscale
+  - save the grayscale image to `outputs/test_gray.jpg`
+- Recompiled the C++ program with `g++`.
+- Successfully ran the updated executable.
+- Confirmed that `outputs/test_gray.jpg` was generated.
+- Learned the basic idea of image channels and BGR/RGB channel order.
+- Committed the OpenCV pipeline update with Git.
+- Pushed the commit successfully to GitHub.
+
+### Problems Encountered
+
+- `git pull --rebase` initially failed because there were unstaged local changes in:
+  - `docs/learning-log.md`
+  - `src/image_loader.cpp`
+- I accidentally created `.gitigonore` due to a filename typo.
+- I needed clarification on what `cat` means and how output redirection works.
+- I needed clarification on BGR/RGB channel order.
+- I had to make sure generated output files should not be tracked by Git.
+- I needed to confirm that the final Git state was clean after committing and pushing.
+
+### What I Learned
+
+- `git pull --rebase` should usually be run when the working tree is clean.
+- `git status` helps check whether there are modified, staged, untracked, or clean files.
+- `mkdir outputs` creates a folder, but fails if it already exists.
+- `mkdir -p outputs` creates the folder if needed and does not complain if it already exists.
+- `cat file` prints a file’s contents to the terminal.
+- `cat file1 >> file2` appends the contents of `file1` to the end of `file2`.
+- `.gitignore` should include generated local outputs such as:
+  - compiled executables
+  - build artifacts
+  - output images
+  - macOS metadata files
+- A clean repository should track source code, documentation, configuration, and useful assets, not generated outputs.
+- `cv::imread()` loads an image from disk.
+- `image.cols` gives image width.
+- `image.rows` gives image height.
+- `image.channels()` gives the number of channels in an image.
+- OpenCV commonly uses BGR channel order for color images.
+- `cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY)` converts a color image to grayscale.
+- `cv::imwrite()` saves an image to disk.
+- The program has now become a minimal image-processing pipeline.
+
+### Next Steps
+
+- Update the README with the current OpenCV milestone:
+  - input image
+  - grayscale conversion
+  - output image generation
+- Continue practicing clean Git workflow:
+  - `git status`
+  - `git add`
+  - `git commit`
+  - `git push`
+- Begin preparing for the next build-system step: understanding why larger C++/ROS2 projects usually use CMake instead of long manual `g++` commands.
+- Keep the project focused on systems fluency rather than rushing into advanced ROS2 features too early.
