@@ -251,3 +251,90 @@ ros2: command not found
   - `git push`
 - Begin preparing for the next build-system step: understanding why larger C++/ROS2 projects usually use CMake instead of long manual `g++` commands.
 - Keep the project focused on systems fluency rather than rushing into advanced ROS2 features too early.
+
+## 2026-05-29
+
+### What I did
+
+- Confirmed that CMake is installed on my Mac:
+  - `cmake --version`
+- Created a new `CMakeLists.txt` file in the project root.
+- Wrote a basic CMake build configuration for the OpenCV image loader.
+- Learned the purpose of the main CMake commands:
+  - `cmake_minimum_required`
+  - `project`
+  - `set(CMAKE_CXX_STANDARD 17)`
+  - `find_package(OpenCV REQUIRED)`
+  - `add_executable`
+  - `target_link_libraries`
+- Configured the project using:
+```bash
+cmake -S . -B build
+```
+- Build the project using:
+```bash
+cmake --build build
+```
+- Successfully ran the CMake-built executable:
+```bash
+./build/image_loader
+```
+- Confirmed that the program still:
+  - loads `assets/test.jpg`
+  - prints image width
+  - prints image height
+  - prints channel count
+  - converts the image to grayscale
+  - saves the result to `outputs/test_gray.jpg`
+- Updated the README with a new “Current OpenCV + CMake Milestone” section.
+- Practiced Git workflow again:
+  - checked `git status`
+  - staged files with `git add`
+  - committed with `git commit`
+  - pushed with `git push`
+- Fixed a Git mistake where I tried to commit before staging files.
+- Successfully committed and pushed the CMake milestone to GitHub.
+
+### Problems Encountered
+
+- I had to understand why CMake uses a separate `build/` directory.
+- I needed clarification on the difference between:
+  - configuring/generating build files
+  - actually compiling/building the executable
+- I forgot that `git commit` only commits staged changes.
+- I ran `git commit` before `git add`, so Git reported that no changes were added to commit.
+- I needed to fix the workflow by staging:
+  - `CMakeLists.txt`
+  - `README.md`
+  - `docs/learning-log.md`
+
+### What I Learned
+
+- CMake does not replace the compiler; it manages the build process and uses the compiler underneath.
+- `CMakeLists.txt` describes how the project should be built.
+- `cmake -S . -B build` means:
+  - source directory is the current directory
+  - generated build files should go into build/
+- `cmake --build build` compiles the project using the generated build files.
+- The `build/` directory contains generated build artifacts and should usually not be committed.
+- `add_executable(image_loader src/image_loader.cpp)` tells CMake to build an executable target named `image_loader`.
+- `target_link_libraries(image_loader ${OpenCV_LIBS})` links the executable with OpenCV.
+- `find_package(OpenCV REQUIRED)` tells CMake to locate OpenCV and fail if it cannot be found.
+- The CMake workflow is more scalable than manually typing a long `g++` command every time.
+- `git add` stages changes.
+- `git commit` records only staged changes.
+- `git push` uploads committed changes to GitHub.
+- A clean engineering workflow usually means:
+  - build locally
+  - verify the program runs
+  - update documentation
+  - check Git status
+  - commit meaningful source/documentation changes
+  - push to GitHub
+
+### Next Steps
+- Run the CMake workflow again from a clean state:
+  - `cmake -S . -B build`
+  - `cmake --build build`
+  - `./build/image_loader`
+- Begin preparing for a cleaner C++ project structure, such as separating reusable image-processing logic from `main()`.
