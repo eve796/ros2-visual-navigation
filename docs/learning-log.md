@@ -4,6 +4,7 @@
 
 ### What I did
 
+- Started Day 1 of the `ros2-visual-navigation` project.
 - Installed Homebrew
 - Configured Git and GitHub CLI authentication
 - Created my first engineering repository
@@ -36,6 +37,7 @@
 
 ### What I did
 
+- Started Day 2 of the `ros2-visual-navigation` project.
 - Successfully connected to Rutgers iLab using SSH
 - Logged into a remote Ubuntu 24.04 Linux machine
 - Learned how remote Linux infrastructure works through terminal access
@@ -73,6 +75,7 @@ ros2: command not found
 
 ### What I did
 
+- Started Day 3 of the `ros2-visual-navigation` project.
 - Practiced basic Linux/macOS terminal commands:
   - `pwd`
   - `ls`
@@ -153,8 +156,8 @@ ros2: command not found
 - Git should track source code, documentation, and useful project assets.
 - Git should usually not track generated files such as executables, object files, build folders, or `.DS_Store`.
 - `.gitignore` helps prevent generated/local files from being accidentally committed.
-- `git add` stages changes for the next commit, and Git’s documentation calls this staging area the “index.” :contentReference[oaicite:2]{index=2}
-- `.gitignore` tells Git which files or directories to ignore, and already-tracked files must be untracked first with `git rm --cached`. :contentReference[oaicite:3]{index=3}
+- `git add` stages changes for the next commit, and Git’s documentation calls this staging area the “index”.
+- `.gitignore` tells Git which files or directories to ignore, and already-tracked files must be untracked first with `git rm --cached`.
 
 ### Next Steps
 
@@ -175,6 +178,8 @@ ros2: command not found
 ## 2026-05-28
 
 ### What I did
+
+- Started Day 4 of the `ros2-visual-navigation` project.
 - Checked the project status with `git status`.
 - Learned why `git pull --rebase` cannot run when there are unstaged local changes.
 - Reviewed the importance of having a clean working tree before synchronizing with GitHub.
@@ -256,6 +261,7 @@ ros2: command not found
 
 ### What I did
 
+- Started Day 6 of the `ros2-visual-navigation` project.
 - Confirmed that CMake is installed on my Mac:
   - `cmake --version`
 - Created a new `CMakeLists.txt` file in the project root.
@@ -338,3 +344,87 @@ cmake --build build
   - `cmake --build build`
   - `./build/image_loader`
 - Begin preparing for a cleaner C++ project structure, such as separating reusable image-processing logic from `main()`.
+
+## 2026-05-30
+
+### What I did
+
+- Started Day 6 of the `ros2-visual-navigation` project.
+- Confirmed that the repository was clean and up to date:
+  - `git pull --rebase`
+  - `git status`
+  - Rebuilt and reran the existing CMake-based OpenCV program before refactoring:
+  - `cmake -S . -B build`
+  - `cmake --build build`
+  - `./build/image_loader`
+- Created a new `include/` directory.
+- Created a new C++ header file:
+  - `include/image_processor.hpp`
+- Created a new C++ implementation file:
+  - `src/image_processor.cpp`
+- Refactored the OpenCV image-processing logic out of `src/image_loader.cpp`.
+- Separated the project into:
+  - `include/image_processor.hpp` for function declarations
+  - `src/image_processor.cpp` for function definitions
+  - `src/image_loader.cpp` for the main program flow
+- Learned the purpose of a `.hpp` header file.
+- Learned the difference between function declarations and function definitions.
+- Learned why `include/` should be committed to Git because it contains source code, not generated output.
+- Learned the meaning of:
+  - `const`
+  - `&`
+  - `const std::string&`
+  - `const cv::Mat&`
+- Updated `CMakeLists.txt` so the executable builds from multiple source files:
+  - `src/image_loader.cpp`
+  - `src/image_processor.cpp`
+- Added the include directory to the CMake target using:
+  - `target_include_directories(image_loader PRIVATE include)`
+- Rebuilt the project successfully with CMake after the refactor.
+- Confirmed that the refactored program still:
+  - loads `assets/test.jpg`
+  - prints width, height, and channel count
+  - converts the image to grayscale
+  - saves the result to `outputs/test_gray.jpg`
+- Committed and pushed the refactor to GitHub.
+
+### Problems Encountered
+
+- I was confused about the role of `include/image_processor.hpp`and `src/image_processor.cpp`.
+- I needed clarification on what a `.hpp` file is.
+- I wondered whether the `include/` directory should be ignored by Git.
+- I needed clarification on the meaning of `const` and `&` in C++ function parameters.
+- I needed clarification on what `PRIVATE` means in `target_include_directories`.
+- I had to update CMake correctly so that multiple `.cpp` files could be compiled together.
+
+### What I Learned
+
+- A `.hpp` file is a C++ header file.
+- Header files usually declare functions, classes, or interfaces.
+- `.cpp` files usually contain the actual function implementations.
+- `image_processor.hpp` acts like the interface or contract for the image-processing module.
+- `image_processor.cpp` contains the actual logic for loading, printing, converting, and saving images.
+- `image_loader.cpp` should focus on the main program flow.
+- Separating logic from `main()` makes the project easier to read, debug, and extend.
+- `const` means the function promises not to modify the parameter.
+- `&` means the parameter is passed by reference, avoiding unnecessary copying.
+- `const std::string& input_path` means the function can read the path efficiently without modifying it.
+- `const cv::Mat& image` means the function can read the image efficiently without modifying it.
+- `include/` should not be ignored because it contains important source/header files.
+- Generated files such as `build/`, `outputs/`, executables, and object files should be ignored.
+- `target_include_directories(image_loader PRIVATE include)` tells CMake where to find header files when compiling the `image_loader` target.
+- `PRIVATE` means the include directory is only needed by this target.
+- A project can have multiple source files compiled into one executable.
+
+### Next Steps
+
+- Review the three-file structure again:
+  - `include/image_processor.hpp`
+  - `src/image_processor.cpp`
+  - `src/image_loader.cpp`
+- Make sure I can explain the role of each file without looking at notes.
+- Consider adding one more simple image-processing function, such as:
+  - blur image
+  - edge detection
+  - thresho
+- Continue keeping the project focused on clean structure, build workflow, documentation, and GitHub progress.
