@@ -1,4 +1,4 @@
-#include <opencv2/opencv.hpp>
+#include "image_processor.hpp"
 #include <iostream>
 #include <string>
 
@@ -8,27 +8,22 @@ int main()
     std::string output_path = "outputs/test_gray.jpg";
 
     // Load image from disk
-    cv::Mat image = cv::imread(input_path);
+    cv::Mat image = loadImage(input_path);
 
     // Check whether loading failed
     if (image.empty())
     {
-        std::cout << "Failed to load image." << input_path << std::endl;
         return -1;
     }
-    std::cout << "Image loaded successfully!" << std::endl;
     
     // Print image information
-    std::cout << "Width: " << image.cols << std::endl;
-    std::cout << "Height: " << image.rows << std::endl;
-    std::cout << "Channels: " << image.channels() << std::endl;
+    printImageInfo(image);
 
     // Convert color image to grayscale
-    cv::Mat gray;
-    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    cv::Mat gray = convertToGray(image);
 
     // Save grayscale image to disk
-    bool saved = cv::imwrite(output_path, gray);
+    bool saved = saveImage(output_path, gray);
 
     if (!saved)
     {
@@ -36,7 +31,7 @@ int main()
         return -1;
     }
 
-     std::cout << "Grayscale image saved to: " << output_path << std::endl;
+    std::cout << "Grayscale image saved to: " << output_path << std::endl;
 
     return 0;
 }
