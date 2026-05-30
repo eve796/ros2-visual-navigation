@@ -353,7 +353,7 @@ cmake --build build
 - Confirmed that the repository was clean and up to date:
   - `git pull --rebase`
   - `git status`
-  - Rebuilt and reran the existing CMake-based OpenCV program before refactoring:
+- Rebuilt and reran the existing CMake-based OpenCV program before refactoring:
   - `cmake -S . -B build`
   - `cmake --build build`
   - `./build/image_loader`
