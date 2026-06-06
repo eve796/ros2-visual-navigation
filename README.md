@@ -23,6 +23,7 @@ Build a simulation-first robotics system that helps me learn ROS2, Linux-based e
 - C++
 - Python
 - Linux
+- CMake
 
 ## Milestones
 
@@ -64,6 +65,9 @@ The program:
 - prints width, height, and channel count
 - converts the image to grayscale
 - saves the result to `outputs/test_gray.jpg`
+- applies Gaussian blur before edge detection
+- detects edges using Canny edge detection
+- saves the edge image to outputs/test_edges.jpg
 
 Build with CMake:
 

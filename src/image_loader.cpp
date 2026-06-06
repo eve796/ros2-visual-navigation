@@ -4,34 +4,52 @@
 
 int main()
 {
+    // define input and output paths
     std::string input_path = "assets/test.jpg";
-    std::string output_path = "outputs/test_gray.jpg";
+    std::string gray_output_path = "outputs/test_gray.jpg";
+    std::string edge_output_path = "outputs/test_edges.jpg";
 
-    // Load image from disk
+    // load image from disk
     cv::Mat image = loadImage(input_path);
 
-    // Check whether loading failed
+    // check whether loading failed
     if (image.empty())
     {
         return -1;
     }
     
-    // Print image information
+    // print image information
     printImageInfo(image);
 
-    // Convert color image to grayscale
+    // convert color image to grayscale
     cv::Mat gray = convertToGray(image);
 
-    // Save grayscale image to disk
-    bool saved = saveImage(output_path, gray);
+    // save grayscale image to disk
+    bool gray_saved = saveImage(gray_output_path, gray);
 
-    if (!saved)
+    // check whether saving failed
+    if (!gray_saved)
     {
         std::cout << "Failed to save grayscale image: " << std::endl;
         return -1;
     }
 
-    std::cout << "Grayscale image saved to: " << output_path << std::endl;
+    std::cout << "Grayscale image saved to: " << gray_output_path << std::endl;
+
+    // detect edges from the grayscale image
+    cv::Mat edges = detectEdges(gray);
+
+    // save the edge-detection result to disk
+    bool edges_saved = saveImage(edge_output_path, edges);
+    
+    // check whether saving failed
+    if (!edges_saved)
+    {
+    std::cout << "Failed to save edge image." << std::endl;
+    return -1;
+    }
+
+    std::cout << "Edge image saved to: " << edge_output_path << std::endl;
 
     return 0;
 }

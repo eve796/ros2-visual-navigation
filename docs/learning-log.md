@@ -47,7 +47,7 @@
   - `find`
   - `ls`
 - Investigated possible ROS2 installation paths such as '/opt/ros'
-- Read Ruthers infrastructure documentation regarding:
+- Read Rutgers infrastructure documentation regarding:
   - virtual machines
   - Docker containers
   - user-managed environments
@@ -56,7 +56,7 @@
 ### Problems Encountered
 
 - Initially misunderstood SSH command syntax
-- Confused infrastructure\network access with software availability
+- Confused infrastructure/network access with software availability
 - Large filesystem search commands ('find /') appeared to freeze terminal
 - ROS2 command was unavailable:
 ```bash
@@ -261,7 +261,7 @@ ros2: command not found
 
 ### What I did
 
-- Started Day 6 of the `ros2-visual-navigation` project.
+- Started Day 5 of the `ros2-visual-navigation` project.
 - Confirmed that CMake is installed on my Mac:
   - `cmake --version`
 - Created a new `CMakeLists.txt` file in the project root.
@@ -277,7 +277,7 @@ ros2: command not found
 ```bash
 cmake -S . -B build
 ```
-- Build the project using:
+- Built the project using:
 ```bash
 cmake --build build
 ```
@@ -390,7 +390,7 @@ cmake --build build
 
 ### Problems Encountered
 
-- I was confused about the role of `include/image_processor.hpp`and `src/image_processor.cpp`.
+- I was confused about the role of `include/image_processor.hpp` and `src/image_processor.cpp`.
 - I needed clarification on what a `.hpp` file is.
 - I wondered whether the `include/` directory should be ignored by Git.
 - I needed clarification on the meaning of `const` and `&` in C++ function parameters.
@@ -426,5 +426,75 @@ cmake --build build
 - Consider adding one more simple image-processing function, such as:
   - blur image
   - edge detection
-  - thresho
+  - thresholding
 - Continue keeping the project focused on clean structure, build workflow, documentation, and GitHub progress.
+
+## 2026-05-31
+
+### What I did
+
+- Started Day 7 of the `ros2-visual-navigation` project.
+- Added a new image-processing function declaration in `include/image_processor.hpp`:
+  - `cv::Mat detectEdges(const cv::Mat& gray_image);`
+- Implemented the new `detectEdges()` function in `src/image_processor.cpp`.
+- Used `cv::GaussianBlur()` to blur the grayscale image before edge detection.
+- Used `cv::Canny()` to detect edges from the blurred grayscale image.
+- Updated `src/image_loader.cpp` so the program now saves:
+  - `outputs/test_gray.jpg`
+  - `outputs/test_edges.jpg`
+- Successfully rebuilt the project with CMake after adding the new function.
+- Successfully ran the program and confirmed the output:
+  - grayscale image saved
+  - edge image saved
+- Confirmed that `outputs/` contains both generated files:
+  - `test_gray.jpg`
+  - `test_edges.jpg`
+- Learned why `#pragma once` is used in a header file.
+- Learned the basic meaning of image edges:
+  - sharp brightness/intensity changes in an image
+  - often corresponding to object boundaries or structural lines
+- Added annotations/comments to better explain the image-processing code.
+
+### Problems Encountered
+
+- I was confused about what “edges” mean in an image.
+- I needed to understand why edge detection is usually applied after grayscale conversion.
+- I needed to understand why Gaussian blur is applied before Canny edge detection.
+
+### What I Learned
+- `#pragma once` prevents the same header file from being included multiple times during one compilation.
+- Header protection becomes more important as a project grows and headers are included by multiple source files.
+- An edge is a sharp change in pixel intensity.
+- In a grayscale image, pixel intensity roughly means brightness.
+- Edge detection tries to find boundaries or strong visual structure in an image.
+- Canny edge detection is a common method for detecting edges.
+- Edge detection is sensitive to noise, so blurring the image first can reduce false edges.
+- `cv::GaussianBlur(gray_image, blurred, cv::Size(5, 5), 1.5)` smooths the image before edge detection.
+  - `cv::Size(5, 5)` means the blur uses a 5-by-5 neighborhood.
+  - The sigma value controls the blur strength.
+- `cv::Canny(blurred, edges, 100, 200)` detects edges using two thresholds.
+  - Lower thresholds may detect more edges but can include more noise.
+  - Higher thresholds may detect fewer edges but can miss weaker boundaries.
+- The `detectEdges()` function takes a grayscale image as input and returns an edge image as output.
+- The OpenCV pipeline now looks like:
+```bash
+load color image
+→ convert to grayscale
+→ blur grayscale image
+→ detect edges
+→ save grayscale and edge outputs
+```
+- This is the first step from simple image loading toward basic visual perception.
+
+### Next Steps
+- Review the full image-processing pipeline and make sure I can explain:
+  - what each file does
+  - what each function does
+  - why edge detection uses grayscale input
+  - why blur is applied before Canny
+- Consider adding one more small improvement next:
+  - command-line input/output paths
+  - thresholding
+  - saving output filenames more cleanly
+  - a short architecture note for the current OpenCV module
+- Continue keeping the project incremental, documented, and connected to the future ROS2 visual navigation system.
