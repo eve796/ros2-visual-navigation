@@ -446,9 +446,8 @@ cmake --build build
 - Successfully ran the program and confirmed the output:
   - grayscale image saved
   - edge image saved
-- Confirmed that `outputs/` contains both generated files:
-  - `test_gray.jpg`
-  - `test_edges.jpg`
+- Verified generated output files with:
+  - `ls outputs`
 - Learned why `#pragma once` is used in a header file.
 - Learned the basic meaning of image edges:
   - sharp brightness/intensity changes in an image
@@ -477,7 +476,7 @@ cmake --build build
   - Higher thresholds may detect fewer edges but can miss weaker boundaries.
 - The `detectEdges()` function takes a grayscale image as input and returns an edge image as output.
 - The OpenCV pipeline now looks like:
-```bash
+```text
 load color image
 → convert to grayscale
 → blur grayscale image
@@ -498,3 +497,103 @@ load color image
   - saving output filenames more cleanly
   - a short architecture note for the current OpenCV module
 - Continue keeping the project incremental, documented, and connected to the future ROS2 visual navigation system.
+
+## 2026-06-07
+
+### What I did
+
+- Started Day 8 of the `ros2-visual-navigation` project.
+- Continued improving the standalone C++/OpenCV image-processing pipeline.
+- Changed `main()` from:
+```cpp
+int main()
+```
+to:
+```cpp
+int main(int argc, char* argv[])
+```
+- Added basic command-line input path support.
+- Updated the program so it can run in two modes:
+  - default mode:
+```bash
+./build/image_loader
+```
+  - custom input image mode:
+```bash
+./build/image_loader assets/test.jpg
+```
+- Learned the basic meaning of:
+  - `argc`
+  - `argv`
+  - `argv[0]`
+  - `argv[1]`
+- Added automatic output-directory creation:
+```cpp
+std::filesystem::create_directories("outputs");
+```
+- Learned why the program should create the `outputs/` directory automatically before saving generated files.
+- Successfully ran the program with a custom input path:
+```bash
+./build/image_loader assets/test.jpg
+```
+- Confirmed that the program:
+  - loaded the custom input image
+  - printed width, height, and channel count
+  - saved `outputs/test_gray.jpg`
+  - saved `outputs/test_edges.jpg`
+- Tested output-directory creation by deleting `outputs/`:
+```bash
+rm -rf outputs
+```
+- Confirmed that the program recreated `outputs/` automatically.
+- Verified generated output files with:
+```bash
+ls outputs
+```
+
+### Problems Encountered
+
+- I needed clarification on why command-line arguments are useful.
+- I needed to understand the difference between:
+  - a hard-coded input path
+  - a user-provided input path
+- I needed clarification on why `std::filesystem::create_directories("outputs")` is useful.
+- I needed to understand why a program should not depend too much on manual setup steps, such as creating the output folder by hand.
+
+### What I Learned
+
+- `argc` means argument count.
+- `argv` stores command-line argument values.
+- `argv[0]` is usually the program name or executable path.
+- `argv[1]` is the first user-provided argument after the program name.
+- This command:
+```bash
+./build/image_loader assets/test.jpg
+```
+means:
+```text
+argv[0] = ./build/image_loader
+argv[1] = assets/test.jpg
+```
+- The program can now use a default image path if no argument is provided.
+- The program can also use a custom image path if the user provides one.
+- Hard-coded paths are simple, but less flexible.
+- Command-line input makes the program more reusable.
+- `std::filesystem::create_directories("outputs")` makes sure the output directory exists before saving images.
+  - If `outputs/` does not exist, the program creates it.
+  - If `outputs/` already exists, the program continues normally.
+  - This makes the program more robust and reduces fragile manual setup assumptions.
+
+### Next Steps
+
+- Review the full pipeline and make sure I can explain:
+  - `argc`
+  - `argv`
+  - default input path
+  - custom input path
+  - `std::filesystem::create_directories`
+- Consider the next improvement:
+  - cleaner output filenames based on the input image
+  - better error messages
+  - adding a small architecture note for the OpenCV module
+- Continue moving gradually toward a reusable vision component that can later connect to ROS2.
