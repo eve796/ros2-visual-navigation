@@ -597,3 +597,92 @@ argv[1] = assets/test.jpg
   - better error messages
   - adding a small architecture note for the OpenCV module
 - Continue moving gradually toward a reusable vision component that can later connect to ROS2.
+
+## 2026-06-08
+
+### What I did
+
+- Started Day 9 of the `ros2-visual-navigation` project.
+- Continued improving the standalone C++/OpenCV image-processing pipeline.
+- Updated `src/image_loader.cpp` so output filenames are generated from the input image name.
+- Used `std::filesystem::path` to treat the input image path as a filesystem path.
+- Used `.stem().string()` to extract the base filename without the extension.
+- Changed output paths from fixed names:
+```bash
+outputs/test_gray.jpg
+outputs/test_edges.jpg
+```
+to generated names based on the input file:
+```bash
+outputs/<input_name>_gray.jpg
+outputs/<input_name>_edges.jpg
+```
+- Added runtime print messages to show:
+  - input image path
+  - grayscale output path
+  - edge output path
+- Tested the program with a copied image:
+```bash
+cp assets/test.jpg assets/test2.jpg
+./build/image_loader assets/test2.jpg
+```
+- Confirmed that the program generated:
+```bash
+outputs/test2_gray.jpg
+outputs/test2_edges.jpg
+```
+- Created a new architecture note file `docs/opencv-module-notes.md`
+- Documented the current purpose, pipeline, and file responsibilities of the OpenCV module.
+- Updated the README to include the current OpenCV module progress.
+- Committed and pushed today’s work to GitHub:
+```bash
+git add src/image_loader.cpp README.md docs/opencv-module-notes.md
+git commit -m "Generate output filenames and document OpenCV module"
+git push
+```
+
+### Problems Encountered
+
+- I initially had a variable-name typo between:
+  - `edges_output_path`
+  - `edge_output_path`
+- I needed clarification on how `std::filesystem::path` works.
+- I needed to understand what `.stem().string()` does.
+- I was unsure whether the temporary copied image `assets/test2.jpg` should be committed.
+
+### What I Learned
+
+- `std::filesystem::path` lets C++ represent and work with filesystem paths more cleanly than plain strings.
+- `input_file.stem().string()` extracts the input filename without the extension.
+- Generated output filenames make the program more reusable.
+- Different input images no longer have to overwrite the same output files.
+- Runtime debug messages make it easier to understand what the program is reading and writing.
+- Temporary test files do not always need to be committed.
+- A documentation file such as `docs/opencv-module-notes.md` is useful because it records the current architecture and responsibilities of the OpenCV module.
+- The current OpenCV pipeline now works like this:
+```text
+input image path
+→ extract input base filename
+→ create output directory
+→ generate output filenames
+→ load image
+→ convert to grayscale
+→ detect edges
+→ save generated outputs
+```
+
+### Next Steps
+- Review `docs/opencv-module-notes.md` and make sure I can explain:
+  - current module purpose
+  - current pipeline
+  - file responsibilities
+  - how this module may later connect to ROS2
+- Consider improving error handling next:
+  - clearer message when input image path is wrong
+  - clearer message when output saving fails
+  - optional usage message for command-line input
+- Continue moving the OpenCV module toward a reusable vision component for the future ROS2 visual navigation system.
+
+## 2026-06-09
+
+
