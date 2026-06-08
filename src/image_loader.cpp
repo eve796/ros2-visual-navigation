@@ -18,9 +18,18 @@ int main(int argc, char* argv[])
     // make sure the outputs directory exists before saving images
     std::filesystem::create_directories("outputs");
 
-    // default output paths
-    std::string gray_output_path = "outputs/test_gray.jpg";
-    std::string edge_output_path = "outputs/test_edges.jpg";
+    // extract the base filename from the input path
+    std::filesystem::path input_file(input_path);
+    std::string base_name = input_file.stem().string();
+    
+    // generate output paths based on the input image name
+    std::string gray_output_path = "outputs/" + base_name + "_gray.jpg";
+    std::string edges_output_path = "outputs/" + base_name + "_edges.jpg";
+
+    // print paths for easier debugging
+    std::cout << "Input image: " << input_path << std::endl;
+    std::cout << "Grayscale output: " << gray_output_path << std::endl;
+    std::cout << "Edge output: " << edges_output_path << std::endl;
 
     // load image from disk
     cv::Mat image = loadImage(input_path);
@@ -53,7 +62,7 @@ int main(int argc, char* argv[])
     cv::Mat edges = detectEdges(gray);
 
     // save the edge-detection result to disk
-    bool edges_saved = saveImage(edge_output_path, edges);
+    bool edges_saved = saveImage(edges_output_path, edges);
     
     // check whether saving failed
     if (!edges_saved)
@@ -62,7 +71,7 @@ int main(int argc, char* argv[])
     return -1;
     }
 
-    std::cout << "Edge image saved to: " << edge_output_path << std::endl;
+    std::cout << "Edge image saved to: " << edges_output_path << std::endl;
 
     return 0;
 }

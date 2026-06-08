@@ -83,6 +83,7 @@ The program:
 - detects edges using Canny edge detection
 - saves the edge image to `outputs/test_edges.jpg`
 - automatically creates the `outputs/` directory if it does not exist
+- generates output filenames from the input image name
 
 Current pipeline:
 
@@ -94,6 +95,10 @@ input image path
 → detect edges
 → save grayscale and edge outputs
 ```
+
+## Technical Notes
+
+- [OpenCV Module Notes](docs/opencv-module-notes.md)
 
 ## Build and Run
 
