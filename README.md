@@ -96,6 +96,32 @@ input image path
 → save grayscale and edge outputs
 ```
 
+## Command-Line Usage
+
+Run with the default image:
+
+```bash
+./build/image_loader
+```
+
+Run with a custom image:
+
+```bash
+./build/image_loader assets/test.jpg
+```
+
+If too many arguments are provided, the program prints a usage message:
+
+```text
+Usage: ./build/image_loader [input_image_path]
+```
+
+If the input image path does not exist, the program prints an error message:
+
+```text
+Error: input image does not exist: assets/not_exist.jpg
+```
+
 ## Technical Notes
 
 - [OpenCV Module Notes](docs/opencv-module-notes.md)

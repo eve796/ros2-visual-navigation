@@ -685,4 +685,109 @@ input image path
 
 ## 2026-06-09
 
+### What I did
+
+- Started Day 10 of the `ros2-visual-navigation` project.
+- Continued improving the standalone C++/OpenCV image-processing pipeline.
+- Focused on making `image_loader` more robust as a command-line tool.
+- Reviewed the current command-line usage:
+```bash
+./build/image_loader
+./build/image_loader assets/test.jpg
+```
+- Added CLI validation for too many command-line arguments.
+- Added a usage message for invalid command-line usage:
+```text
+Usage: ./build/image_loader [input_image_path]
+```
+- Added an input path existence check before loading the image with OpenCV.
+- Used `std::filesystem::exists(input_path)` to check whether the input image path exists.
+- Tested the missing input file case:
+```bash
+./build/image_loader assets/not_exist.jpg
+```
+- Confirmed that the program printed a clear error message:
+```text
+Error: input image does not exist: assets/not_exist.jpg
+```
+- Tested the too-many-arguments case:
+```bash
+./build/image_loader assets/test.jpg extra_argument
+```
+- Confirmed that the program printed the usage message:
+```text
+Usage: ./build/image_loader [input_image_path]
+```
+- Learned that CLI means command-line interface.
+- Learned that validation means checking whether user input is acceptable before the main processing logic runs.
+
+### Problems Encountered
+
+- I needed to understand the difference between:
+  - general error handling
+  - input validation
+  - command-line validation
+- I needed to understand why checking argument count is useful.
+- I needed to understand why checking whether the input path exists before calling OpenCV is better than only relying on OpenCV failure behavior.
+- I had to make sure the program handled both valid and invalid command-line usage clearly.
+
+### What I Learned
+
+- CLI means command-line interface.
+- In this project, the CLI is the way I run the program from the terminal, such as:
+```bash
+./build/image_loader assets/test.jpg
+```
+- CLI validation means checking whether the command-line input is valid before continuing.
+- `argc` stores the number of command-line arguments.
+- `argv` stores the command-line argument values.
+- `argc > 2` means the user provided too many arguments for the current program design.
+- A usage message tells the user how to run the program correctly.
+- This code checks for too many arguments:
+```cpp
+if (argc > 2)
+{
+    std::cout << "Usage: " << argv[0] << " [input_image_path]" << std::endl;
+    return 1;
+}
+  ```
+- `std::filesystem::exists(input_path)` checks whether the input path exists before the program tries to load it.
+- This code checks whether the image path exists:
+```cpp
+if (!std::filesystem::exists(input_path))
+{
+    std::cout << "Error: input image does not exist: " << input_path << std::endl;
+    return 1;
+}
+  ```
+- Validation is different from general error handling:
+  - validation checks whether input is acceptable before the main work begins
+  - error handling responds when something goes wrong
+- The image-processing pipeline now has a clearer structure:
+```text
+read command-line arguments
+→ validate argument count
+→ choose default or custom input path
+→ validate input path exists
+→ create output directory
+→ generate output filenames
+→ load image
+→ process image
+→ save outputs
+```
+- The program is becoming less like a one-off script and more like a small engineering command-line tool.
+
+### Next Steps
+- Commit and push today's work:
+```bash
+git status
+git add src/image_loader.cpp README.md docs/opencv-module-notes.md docs/learning-log.md
+git commit -m "Add CLI validation for image loader"
+git push
+```
+- Continue improving the OpenCV module gradually before connecting it to ROS2.
+- Consider a future small improvement:
+  - move path-generation logic into a helper function
+  - add cleaner error messages
+  - add a simple test checklist in documentation
 

@@ -15,3 +15,7 @@ input image path
 → detect edges
 → save generated outputs
 ```
+
+## Current Error Handling
+
+The image loader now checks basic command-line usage and verifies that the input image path exists before attempting to load it with OpenCV.
