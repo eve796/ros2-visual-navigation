@@ -1,4 +1,5 @@
 #include "image_processor.hpp"
+#include "path_utils.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -30,20 +31,16 @@ int main(int argc, char* argv[])
     }
 
     // make sure the outputs directory exists before saving images
-    std::filesystem::create_directories("outputs");
-
-    // extract the base filename from the input path
-    std::filesystem::path input_file(input_path);
-    std::string base_name = input_file.stem().string();
+    std::string output_dir = "outputs";
+    std::filesystem::create_directories(output_dir);
     
-    // generate output paths based on the input image name
-    std::string gray_output_path = "outputs/" + base_name + "_gray.jpg";
-    std::string edges_output_path = "outputs/" + base_name + "_edges.jpg";
+    // build output paths based on the input image name
+    OutputPaths output_paths = buildOutputPaths(input_path, output_dir);
 
     // print paths for easier debugging
     std::cout << "Input image: " << input_path << std::endl;
-    std::cout << "Grayscale output: " << gray_output_path << std::endl;
-    std::cout << "Edge output: " << edges_output_path << std::endl;
+    std::cout << "Grayscale output: " << output_paths.gray << std::endl;
+    std::cout << "Edge output: " << output_paths.edges << std::endl;
 
     // load image from disk
     cv::Mat image = loadImage(input_path);
@@ -61,7 +58,7 @@ int main(int argc, char* argv[])
     cv::Mat gray = convertToGray(image);
 
     // save grayscale image to disk
-    bool gray_saved = saveImage(gray_output_path, gray);
+    bool gray_saved = saveImage(output_paths.gray, gray);
 
     // check whether saving failed
     if (!gray_saved)
@@ -70,13 +67,13 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::cout << "Grayscale image saved to: " << gray_output_path << std::endl;
+    std::cout << "Grayscale image saved to: " << output_paths.gray << std::endl;
 
     // detect edges from the grayscale image
     cv::Mat edges = detectEdges(gray);
 
     // save the edge-detection result to disk
-    bool edges_saved = saveImage(edges_output_path, edges);
+    bool edges_saved = saveImage(output_paths.edges, edges);
     
     // check whether saving failed
     if (!edges_saved)
@@ -85,7 +82,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::cout << "Edge image saved to: " << edges_output_path << std::endl;
+    std::cout << "Edge image saved to: " << output_paths.edges << std::endl;
 
     return 0;
 }

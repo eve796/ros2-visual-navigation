@@ -791,3 +791,113 @@ git push
   - add cleaner error messages
   - add a simple test checklist in documentation
 
+## 2026-06-10
+
+### What I did
+- Started Day 11 of the `ros2-visual-navigation` project.
+- Continued improving the standalone C++/OpenCV image-processing pipeline.
+- Focused on refactoring output path generation out of `main()`.
+- Created a new header file:
+  ```text
+  include/path_utils.hpp
+  ```
+- Created a new implementation file:
+  ```text
+  src/path_utils.cpp
+  ```
+- Added a small `OutputPaths` struct to group related output paths:
+  ```cpp
+  struct OutputPaths
+  {
+      std::string gray;
+      std::string edges;
+  };
+  ```
+- Added a helper function declaration:
+  ```cpp
+  OutputPaths buildOutputPaths(const std::string& input_path,
+                               const std::string& output_dir);
+  ```
+- Implemented `buildOutputPaths()` in `src/path_utils.cpp`.
+- Used `std::filesystem::path` to handle input and output paths more cleanly.
+- Used `path::stem()` to extract the input image base filename.
+- Used the filesystem path `/` operator to join the output directory with generated filenames.
+- Updated `src/image_loader.cpp` to use `buildOutputPaths()` instead of building output paths directly inside `main()`.
+- Updated `CMakeLists.txt` so the new source file is compiled:
+  ```cmake
+  src/path_utils.cpp
+  ```
+- Rebuilt the project with CMake:
+  ```bash
+  cmake -S . -B build
+  cmake --build build
+  ```
+- Tested the image loader after refactoring and confirmed that behavior stayed the same.
+- Created a manual test checklist:
+  ```text
+  docs/manual-test-checklist.md
+  ```
+
+### Problems Encountered
+- After refactoring, some old variable names still remained in `src/image_loader.cpp`.
+- I needed to replace old variables such as:
+  ```cpp
+  gray_output_path
+  edges_output_path
+  ```
+  with:
+  ```cpp
+  output_paths.gray
+  output_paths.edges
+  ```
+- I accidentally used the grayscale output path for the edge image in one place.
+- I had duplicated output-directory creation logic.
+- I needed to understand why the new helper module requires both:
+  - a header file for declarations
+  - a `.cpp` file for implementation
+- I needed to make sure the refactor did not change the program's external behavior.
+
+### What I Learned
+- Refactoring means improving code structure without changing the expected behavior.
+- A helper module can make the project easier to maintain as it grows.
+- `path_utils.hpp` declares the path-related interface.
+- `path_utils.cpp` implements the path-related logic.
+- `OutputPaths` is a simple struct that groups related output path strings together.
+- Returning a struct is cleaner than managing multiple separate output path variables.
+- `buildOutputPaths()` receives:
+  - the input image path
+  - the output directory
+- `buildOutputPaths()` returns:
+  - the grayscale output path
+  - the edge output path
+- `std::filesystem::path` is more appropriate than plain string manipulation for filesystem paths.
+- `path::stem()` extracts the filename without the extension.
+- The current program structure is now clearer:
+  ```text
+  image_loader.cpp
+  → controls main program flow
+
+  image_processor.hpp / image_processor.cpp
+  → handle OpenCV image-processing operations
+
+  path_utils.hpp / path_utils.cpp
+  → handle output path generation
+
+  manual-test-checklist.md
+  → documents repeatable manual tests
+  ```
+
+### Next Steps
+- Commit and push today's refactor:
+  ```bash
+  git add include/path_utils.hpp src/path_utils.cpp src/image_loader.cpp CMakeLists.txt README.md docs/manual-test-checklist.md docs/learning-log.md
+  git commit -m "Refactor output path generation"
+  git push
+  ```
+- Continue improving the OpenCV module gradually before connecting it to ROS2.
+- Consider the next improvement:
+  - add a small test image policy
+  - add a basic project architecture diagram
+  - begin planning the transition from standalone OpenCV processing to a ROS2-style node structure
+
+

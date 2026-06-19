@@ -7,10 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(OpenCV REQUIRED)
 
-add_executable(image_loader 
+add_executable(image_loader
     src/image_loader.cpp
     src/image_processor.cpp
-    )
+    src/path_utils.cpp
+)
 
 target_include_directories(image_loader PRIVATE include)
 
