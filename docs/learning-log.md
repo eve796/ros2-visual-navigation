@@ -900,4 +900,89 @@ git push
   - add a basic project architecture diagram
   - begin planning the transition from standalone OpenCV processing to a ROS2-style node structure
 
+## 2026-06-23
+
+### What I did
+
+- Started Day 12 of the `ros2-visual-navigation` project.
+- Focused on documentation consolidation and architecture clarity rather than adding new C++ feature code.
+- Checked the responsibilities of the existing documentation files:
+  - `docs/architecture.md`
+  - `docs/learning-log.md`
+  - `docs/manual-test-checklist.md`
+  - `docs/opencv-module-notes.md`
+  - `docs/setup.md`
+- Identified overlap between:
+  - `docs/architecture.md`
+  - `docs/opencv-module-notes.md`
+- Decided to simplify the documentation structure by merging the useful OpenCV module notes into `docs/architecture.md`.
+- Kept the documentation structure focused around:
+  ```text
+  docs/
+    architecture.md
+    learning-log.md
+    manual-test-checklist.md
+    setup.md
+  ```
+- Updated `README.md` into a cleaner front-page structure.
+- Updated the README documentation links to point to:
+  - `docs/architecture.md`
+  - `docs/manual-test-checklist.md`
+  - `docs/learning-log.md`
+  - `docs/setup.md`
+- Documented the current standalone OpenCV pipeline and how it may later transition into a ROS2 vision node.
+
+### Problems Encountered
+
+- I was unsure whether the project had too many documentation files in `docs/`.
+- I needed to understand the difference between:
+  - useful documentation
+  - duplicated documentation
+  - unnecessary documentation fragmentation
+- I needed to simplify the README without losing important project context.
+
+### What I Learned
+
+- The number of files is not the main issue; unclear responsibility and duplicated content are the real problems.
+- `docs/learning-log.md` should stay separate because it is a chronological engineering notebook.
+- `docs/manual-test-checklist.md` should stay separate because it documents repeatable verification steps.
+- `docs/setup.md` should stay separate if it contains environment/setup instructions.
+- `docs/architecture.md` should become the main design document for:
+  - current data flow
+  - module responsibilities
+  - current error handling
+  - manual testing reference
+  - future ROS2 transition
+- `docs/opencv-module-notes.md` was useful, but its content overlapped with `architecture.md`, so it is better to merge rather than keep both files.
+- A README should act as the front page of the repository.
+- The current system is now easier to explain because the responsibilities are clearer:
+  ```text
+  README.md
+  → project front page
+
+  docs/architecture.md
+  → system design and ROS2 transition thinking
+
+  docs/manual-test-checklist.md
+  → repeatable manual verification
+
+  docs/learning-log.md
+  → daily engineering notebook
+
+  docs/setup.md
+  → setup/environment notes
+  ```
+
+### Next Steps
+
+- Commit and push the documentation consolidation:
+  ```bash
+  git add README.md docs/architecture.md docs/learning-log.md
+  git commit -m "Consolidate project documentation"
+  git push
+  ```
+- Next project direction:
+  - begin preparing for the ROS2 basics stage
+  - learn the concepts of ROS2 workspace, package, node, topic, message, and callback
+  - keep the current OpenCV module stable and reusabl
 
