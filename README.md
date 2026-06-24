@@ -66,28 +66,6 @@ CMakeLists.txt
 README.md
 ```
 
-## Command-Line Usage
-
-Run with the default image:
-```bash
-./build/image_loader
-```
-
-Run with a custom image:
-```bash
-./build/image_loader assets/test.jpg
-```
-
-If too many arguments are provided, the program prints a usage message:
-```text
-Usage: ./build/image_loader [input_image_path]
-```
-
-If the input image path does not exist, the program prints an error message:
-```text
-Error: input image does not exist: assets/not_exist.jpg
-```
-
 ## Build and Run
 
 From the project root:
@@ -136,7 +114,7 @@ Edge image saved to: outputs/test_edges.jpg
 ## Current Architecture Overview
 
 Current standalone OpenCV pipeline:
-
+```text
 command-line input
 → input path validation
 → output path generation
@@ -145,9 +123,10 @@ command-line input
 → Gaussian blur
 → Canny edge detection
 → save output images
+```
 
 Current module responsibilities:
-
+```text
 src/image_loader.cpp
 → controls main program flow
 
@@ -161,6 +140,7 @@ src/path_utils.cpp
 
 docs/manual-test-checklist.md
 → documents repeatable manual test cases
+```
 
 ## Documentation
 
